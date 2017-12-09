@@ -12,7 +12,7 @@
            header      | bp         | NXP        |    偶数个字        | footer
            29位      a |          u |                                            u 
    已分配：
-		   size * pa 1 | ********** | *******(这一段可以没有）********|
+           size * pa 1 | ********** | *******(这一段可以没有) ********|
    
    至少16个字节的空闲块：
            prev * pa 0 | next * * 0 | size * * * | ********* ******** | size * * 0 
@@ -23,8 +23,8 @@
    pa 表示前一块是否为已分配块, u表示这个空闲块是否是8字节的
 
    一个链表需要用两个字记录头和尾，一共有15个链表，这些信息顺序储存在堆的最前面
- */
-//#define DEBUG
+*/
+#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -95,8 +95,6 @@ static char *heap_listp = 0;  /* Pointer to first block */
 #define NXP(bp) 	((char *)bp + WSIZE)         // 真实地址pp的下一个字的地址
 #define NXO(bp) 	(GET_SIZE(NXP(bp)))          // pp的下一个字的值的高29位
 #define NXT(bp) 	(PTO(NXP(bp)))
-#define NNP(bp) 	((char *)bp + DSIZE)
-#define NNO(bp) 	(GET_SIZE(NNP(bp)))
 
 /* Function prototypes for internal helper routines */
 
@@ -283,6 +281,8 @@ void *delete_from_list(void *lst, void *bp){
 
 /* 
  * mm_init - Initialize the memory manager 
+ * 初始的结构是：
+ * | L0 | L1 | L2 | ... ... | L14 |  pro|pro epi|
  */
 int mm_init(void) 
 {
@@ -402,6 +402,33 @@ static void print_list(void *lst){
 	printf("\n");
 }
 
+static int check_list(int id){
+	void *lst = get_list_byID(id);
+	void *pp = lst;
+	size_t pre_off = 0;
+	int cnt = 0;
+	while (GET_SIZE(pp)){
+		++cnt;
+		void *bp = PTO(pp);
+
+		//check pointers and head
+		assert(GET_SIZE(HDRP(bp)) == pre_off);
+
+		//check tail
+		if (GET_SIZE(bp) == 0)
+			assert(NXO(lst) == OFF(bp));
+
+		//check size range
+		size_t sz = get_size(bp);
+		assert(get_listID(sz) == id);
+
+		pre_off = OFF(bp);
+		pp = bp;
+	}
+
+	return cnt;
+}
+
 /* 
  * mm_checkheap - Check the heap for correctness. Helpful hint: You
  *                can call this function using mm_checkheap(__LINE__);
@@ -409,17 +436,51 @@ static void print_list(void *lst){
  */
 void mm_checkheap(int lineno)  
 { 
-	static int cnt = 0;
-	lineno = lineno; /* keep gcc happy */
-	printf("[%d]:\n");
+	lineno = lineno; // keep gcc happy
+	/*static int cnt = 0;
 	++cnt;
 	if (cnt % 100 != 0) return ;
+*/
+	// check prologue
+	void *pro = ADD(LN*LISTSZ + DSIZE);
+	assert(get_size(pro) == DSIZE);
+	assert(GET_A(HDRP(pro)) == 1);
+	size_t pa = 1;
+	int cnt_free = 0;
+	int cnt_a = 0;
 
-
-	for (int i=1; i<LN; ++i){
-		print_list(get_list_byID(i));
+	// check each block
+	void *bp = next_bp(pro);
+	size_t sz;
+	while ( (sz = get_size(bp)) != 0){
+		assert(pa == GET_PA(HDRP(bp)));
+		pa = GET_A(HDRP(bp));
+		if (pa){
+			++cnt_a;
+		}else{
+			++cnt_free;
+			size_t u = GET_U(bp);
+			if (u == 1){
+				assert(sz == DSIZE);
+			}else{
+				void *ftrp = bp + sz - DSIZE;
+				assert(GET_SIZE(ftrp) == sz);
+				assert(GET_U(ftrp) == 0);
+			}
+		}
+		bp = next_bp(bp);
 	}
-	//printf("\n%d %d %d   max_choice:%d\n", cntL, cntR, cntM, max_choice);
+
+	//check epilogue
+	assert(pa == GET_PA(HDRP(bp)));
+	assert(GET_A(HDRP(bp)) == 1);
+
+	//check the consistency between lists and blocks
+	int cnt_list = 0;
+	for (int id=0; id<LN; ++id){
+		cnt_list += check_list(id);
+	}
+	assert(cnt_list == cnt_free);
 }
 
 /* 
