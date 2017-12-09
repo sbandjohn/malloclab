@@ -1,6 +1,6 @@
 /* 
    林涛 1600012773
-   使用分离双向链表，插入新空闲快时放到链表尾部,
+   使用分离双向链表，插入新空闲块时放到链表尾部,
    分配块时从头开始找到第一个适配的空闲块，
    找不到则扩充堆的大小
    块的大小按照2的幂分类
@@ -20,11 +20,15 @@
    8个字节的空闲块：
            prev * pa 0 | next * * 1 |
    
-   pa 表示前一块是否为已分配块, u表示这个空闲块是否是8字节的
+   bp的地址是双字对齐的，也是块的标识
+   pa表示前一块是否为已分配块, u表示这个空闲块是否是8字节的
+   这样设计保证两类空闲块的链表的处理方式是相同的，
+   且可以根据当前块的pa和前一块的u确定前一块的类型，进而确定size
 
-   一个链表需要用两个字记录头和尾，一共有15个链表，这些信息顺序储存在堆的最前面
+   一个链表需要用两个字分别记录头和尾，一共有15个链表，这些信息顺序储存在堆的最前面的30个字
+   隔一个字后放置双字的序言块，堆的末尾有单字的结语块
 */
-#define DEBUG
+//#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -41,6 +45,7 @@
 
 /* do not change the following! */
 #ifdef DRIVER
+
 /* create aliases for driver tests */
 #define malloc mm_malloc
 #define free mm_free
@@ -48,17 +53,13 @@
 #define calloc mm_calloc
 #endif /* def DRIVER */
 
-/*
- * If NEXT_FIT defined use next fit search, else use first-fit search 
- */
-#define NEXT_FITx
-
 /* Basic constants and macros */
 #define WSIZE       4       /* Word and header/footer size (bytes) */ 
 #define DSIZE       8       /* Double word size (bytes) */
 #define CHUNKSIZE  512  /* Extend heap by this amount (bytes) */  
 
-#define LISTSZ		DSIZE
+#define LN 15   /* 链表的个数 */
+#define LISTSZ		DSIZE // 一个链表的头尾信息的块的大小
 
 #define MAX(x, y) ((x) > (y)? (x) : (y))  
 
@@ -86,8 +87,6 @@
 /* Global variables */
 static char *heap_listp = 0;  /* Pointer to first block */  
 
-#define LN 15   /* 链表的个数 */
-
 #define HPA     	((char*)heap_listp)
 #define OFF(bp) 	((char *)bp - HPA)           // 相对堆基址的偏移
 #define ADD(off) 	(HPA + (off))                // 真实地址
@@ -106,7 +105,10 @@ static void *extend_heap(size_t words);
 static void *place(void *bp, size_t asize);
 static void *coalesce(void *bp);
 
+inline int power2(size_t sz);
 static void *get_list(size_t sz);
+static void *get_list_byID(int id);
+inline int get_listID(size_t sz);
 
 static void insert_to_list(void *lst, void *bp);
 static void insert_node(void *bp);
@@ -397,11 +399,7 @@ void *mm_realloc(void *ptr, size_t size)
 	return newptr;
 }
 
-static void print_list(void *lst){
-	printf("list: %d\n", get_ID(lst));
-	printf("\n");
-}
-
+/* check a list and return the number of blocks in it */
 static int check_list(int id){
 	void *lst = get_list_byID(id);
 	void *pp = lst;
@@ -437,10 +435,7 @@ static int check_list(int id){
 void mm_checkheap(int lineno)  
 { 
 	lineno = lineno; // keep gcc happy
-	/*static int cnt = 0;
-	++cnt;
-	if (cnt % 100 != 0) return ;
-*/
+
 	// check prologue
 	void *pro = ADD(LN*LISTSZ + DSIZE);
 	assert(get_size(pro) == DSIZE);
@@ -453,8 +448,10 @@ void mm_checkheap(int lineno)
 	void *bp = next_bp(pro);
 	size_t sz;
 	while ( (sz = get_size(bp)) != 0){
+		// check whether pa is correct and update
 		assert(pa == GET_PA(HDRP(bp)));
 		pa = GET_A(HDRP(bp));
+
 		if (pa){
 			++cnt_a;
 		}else{
@@ -468,6 +465,7 @@ void mm_checkheap(int lineno)
 				assert(GET_U(ftrp) == 0);
 			}
 		}
+
 		bp = next_bp(bp);
 	}
 
@@ -534,7 +532,6 @@ static void *coalesce(void *bp)
 	}
 
 	else if (!prev_alloc && next_alloc) {      /* Case 3 */
-		/* prevb is unit when prevb's A is 1 */
 		prevb = prev_bp(bp);
 		size += get_size(prevb);
 		delete_node(prevb);
