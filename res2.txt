@@ -1,0 +1,307 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 39.97      3.06     3.06   459403     0.01     0.01  add_range
+ 28.34      5.23     2.17                             run_tests.constprop.2
+ 12.80      6.21     0.98  7978936     0.00     0.00  mm_malloc
+ 11.23      7.07     0.86      348     2.47     2.47  start_comp_counter
+  4.57      7.42     0.35  7116690     0.00     0.00  mm_free
+  1.57      7.54     0.12 13690390     0.00     0.00  delete_node
+  0.78      7.60     0.06      348     0.17     3.96  eval_mm_speed
+  0.52      7.64     0.04 13870514     0.00     0.00  insert_node
+  0.13      7.65     0.01       29     0.34    77.56  fcyc
+  0.13      7.66     0.01       29     0.34     0.34  read_trace.constprop.3
+  0.00      7.66     0.00   918806     0.00     0.00  mem_heap_hi
+  0.00      7.66     0.00   918806     0.00     0.00  mem_heap_lo
+  0.00      7.66     0.00   382107     0.00     0.00  coalesce
+  0.00      7.66     0.00   364518     0.00     0.00  mem_sbrk
+  0.00      7.66     0.00    19394     0.00     0.00  mm_realloc
+  0.00      7.66     0.00      406     0.00     0.00  mem_reset_brk
+  0.00      7.66     0.00      406     0.00     0.00  mm_init
+  0.00      7.66     0.00      348     0.00     0.00  get_comp_counter
+  0.00      7.66     0.00       29     0.00    77.56  fsecs
+  0.00      7.66     0.00       29     0.00     0.00  mem_deinit
+  0.00      7.66     0.00       29     0.00     0.00  mem_heapsize
+  0.00      7.66     0.00       29     0.00     0.00  mem_init
+  0.00      7.66     0.00        1     0.00     0.00  mhz
+  0.00      7.66     0.00        1     0.00     0.00  set_fcyc_clear_cache
+  0.00      7.66     0.00        1     0.00     0.00  set_fcyc_compensate
+  0.00      7.66     0.00        1     0.00     0.00  set_fcyc_epsilon
+  0.00      7.66     0.00        1     0.00     0.00  set_fcyc_k
+  0.00      7.66     0.00        1     0.00     0.00  set_fcyc_maxsamples
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.13% of 7.66 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    2.17    5.49                 run_tests.constprop.2 [1]
+                3.06    0.00  459403/459403      add_range [2]
+                0.00    2.25      29/29          fsecs [4]
+                0.11    0.01  916464/7978936     mm_malloc [6]
+                0.04    0.01  824848/7116690     mm_free [8]
+                0.01    0.00      29/29          read_trace.constprop.3 [11]
+                0.00    0.00  824212/13870514     insert_node [10]
+                0.00    0.00    2486/19394       mm_realloc [12]
+                0.00    0.00      58/406         mm_init [18]
+                0.00    0.00      58/406         mem_reset_brk [17]
+                0.00    0.00      29/29          mem_init [22]
+                0.00    0.00      29/29          mem_heapsize [21]
+                0.00    0.00      29/29          mem_deinit [20]
+-----------------------------------------------
+                3.06    0.00  459403/459403      run_tests.constprop.2 [1]
+[2]     39.9    3.06    0.00  459403         add_range [2]
+                0.00    0.00  918806/918806      mem_heap_hi [14]
+                0.00    0.00  918806/918806      mem_heap_lo [15]
+-----------------------------------------------
+                0.01    2.24      29/29          fsecs [4]
+[3]     29.3    0.01    2.24      29         fcyc [3]
+                0.06    1.32     348/348         eval_mm_speed [5]
+                0.86    0.00     348/348         start_comp_counter [7]
+                0.00    0.00     348/348         get_comp_counter [19]
+-----------------------------------------------
+                0.00    2.25      29/29          run_tests.constprop.2 [1]
+[4]     29.3    0.00    2.25      29         fsecs [4]
+                0.01    2.24      29/29          fcyc [3]
+-----------------------------------------------
+                0.06    1.32     348/348         fcyc [3]
+[5]     18.0    0.06    1.32     348         eval_mm_speed [5]
+                0.87    0.08 7044477/7978936     mm_malloc [6]
+                0.31    0.05 6291820/7116690     mm_free [8]
+                0.02    0.00 6288024/13870514     insert_node [10]
+                0.00    0.00   16908/19394       mm_realloc [12]
+                0.00    0.00     348/406         mm_init [18]
+                0.00    0.00     348/406         mem_reset_brk [17]
+-----------------------------------------------
+                0.00    0.00   17995/7978936     mm_realloc [12]
+                0.11    0.01  916464/7978936     run_tests.constprop.2 [1]
+                0.87    0.08 7044477/7978936     eval_mm_speed [5]
+[6]     13.9    0.98    0.09 7978936         mm_malloc [6]
+                0.07    0.00 7614824/13690390     delete_node [9]
+                0.02    0.00 6740261/13870514     insert_node [10]
+                0.00    0.00  364112/382107      coalesce [13]
+                0.00    0.00  364112/364518      mem_sbrk [16]
+-----------------------------------------------
+                0.86    0.00     348/348         fcyc [3]
+[7]     11.2    0.86    0.00     348         start_comp_counter [7]
+-----------------------------------------------
+                0.00    0.00      22/7116690     mm_realloc [12]
+                0.04    0.01  824848/7116690     run_tests.constprop.2 [1]
+                0.31    0.05 6291820/7116690     eval_mm_speed [5]
+[8]      5.3    0.35    0.05 7116690         mm_free [8]
+                0.05    0.00 6071157/13690390     delete_node [9]
+-----------------------------------------------
+                0.00    0.00    4409/13690390     coalesce [13]
+                0.05    0.00 6071157/13690390     mm_free [8]
+                0.07    0.00 7614824/13690390     mm_malloc [6]
+[9]      1.6    0.12    0.00 13690390         delete_node [9]
+-----------------------------------------------
+                0.00    0.00   18017/13870514     mm_realloc [12]
+                0.00    0.00  824212/13870514     run_tests.constprop.2 [1]
+                0.02    0.00 6288024/13870514     eval_mm_speed [5]
+                0.02    0.00 6740261/13870514     mm_malloc [6]
+[10]     0.5    0.04    0.00 13870514         insert_node [10]
+-----------------------------------------------
+                0.01    0.00      29/29          run_tests.constprop.2 [1]
+[11]     0.1    0.01    0.00      29         read_trace.constprop.3 [11]
+-----------------------------------------------
+                0.00    0.00    2486/19394       run_tests.constprop.2 [1]
+                0.00    0.00   16908/19394       eval_mm_speed [5]
+[12]     0.0    0.00    0.00   19394         mm_realloc [12]
+                0.00    0.00   17995/7978936     mm_malloc [6]
+                0.00    0.00   18017/13870514     insert_node [10]
+                0.00    0.00   17995/382107      coalesce [13]
+                0.00    0.00      22/7116690     mm_free [8]
+-----------------------------------------------
+                0.00    0.00   17995/382107      mm_realloc [12]
+                0.00    0.00  364112/382107      mm_malloc [6]
+[13]     0.0    0.00    0.00  382107         coalesce [13]
+                0.00    0.00    4409/13690390     delete_node [9]
+-----------------------------------------------
+                0.00    0.00  918806/918806      add_range [2]
+[14]     0.0    0.00    0.00  918806         mem_heap_hi [14]
+-----------------------------------------------
+                0.00    0.00  918806/918806      add_range [2]
+[15]     0.0    0.00    0.00  918806         mem_heap_lo [15]
+-----------------------------------------------
+                0.00    0.00     406/364518      mm_init [18]
+                0.00    0.00  364112/364518      mm_malloc [6]
+[16]     0.0    0.00    0.00  364518         mem_sbrk [16]
+-----------------------------------------------
+                0.00    0.00      58/406         run_tests.constprop.2 [1]
+                0.00    0.00     348/406         eval_mm_speed [5]
+[17]     0.0    0.00    0.00     406         mem_reset_brk [17]
+-----------------------------------------------
+                0.00    0.00      58/406         run_tests.constprop.2 [1]
+                0.00    0.00     348/406         eval_mm_speed [5]
+[18]     0.0    0.00    0.00     406         mm_init [18]
+                0.00    0.00     406/364518      mem_sbrk [16]
+-----------------------------------------------
+                0.00    0.00     348/348         fcyc [3]
+[19]     0.0    0.00    0.00     348         get_comp_counter [19]
+-----------------------------------------------
+                0.00    0.00      29/29          run_tests.constprop.2 [1]
+[20]     0.0    0.00    0.00      29         mem_deinit [20]
+-----------------------------------------------
+                0.00    0.00      29/29          run_tests.constprop.2 [1]
+[21]     0.0    0.00    0.00      29         mem_heapsize [21]
+-----------------------------------------------
+                0.00    0.00      29/29          run_tests.constprop.2 [1]
+[22]     0.0    0.00    0.00      29         mem_init [22]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[23]     0.0    0.00    0.00       1         mhz [23]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[24]     0.0    0.00    0.00       1         set_fcyc_clear_cache [24]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[25]     0.0    0.00    0.00       1         set_fcyc_compensate [25]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[26]     0.0    0.00    0.00       1         set_fcyc_epsilon [26]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[27]     0.0    0.00    0.00       1         set_fcyc_k [27]
+-----------------------------------------------
+                0.00    0.00       1/1           init_fsecs [42]
+[28]     0.0    0.00    0.00       1         set_fcyc_maxsamples [28]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+   [2] add_range (mdriver.c)  [15] mem_heap_lo            [11] read_trace.constprop.3 (mdriver.c)
+  [13] coalesce (mm.c)        [21] mem_heapsize            [1] run_tests.constprop.2 (mdriver.c)
+   [9] delete_node (mm.c)     [22] mem_init               [24] set_fcyc_clear_cache
+   [5] eval_mm_speed (mdriver.c) [17] mem_reset_brk       [25] set_fcyc_compensate
+   [3] fcyc                   [16] mem_sbrk               [26] set_fcyc_epsilon
+   [4] fsecs                  [23] mhz                    [27] set_fcyc_k
+  [19] get_comp_counter        [8] mm_free                [28] set_fcyc_maxsamples
+  [10] insert_node (mm.c)     [18] mm_init                 [7] start_comp_counter
+  [20] mem_deinit              [6] mm_malloc
+  [14] mem_heap_hi            [12] mm_realloc
